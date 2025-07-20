@@ -7,16 +7,20 @@ const getTasks = async (userId: string) => {
   return await Task.findAll({where: {userId}});
 }
 
-const createNewTask = async (user: User, title: string, description: string, status: boolean) => {
+//user: User, 
+const createNewTask = async (title: string, description: string, status: boolean) => {
   console.log('Creating a new task with title:', title);
-  const newTask = await Task.create({title, description, user});
+  //user
+  const newTask = await Task.create({title, description,});
   return newTask;
 }
 
-const updateTask = async (userId: string, taskId: string, taskData: Partial<GeneralTask>) => {
+//userId: string,
+const updateTask = async (taskId: string, taskData: Partial<GeneralTask>) => {
   console.log(`Updating task with ID: ${taskId}`);
 
-  const task = await Task.findOne({where: {id: taskId, user: { id: userId }}});
+  //user: { id: userId }
+  const task = await Task.findOne({where: {id: taskId,}});
 
   if (!task) {
     return null;
@@ -26,16 +30,21 @@ const updateTask = async (userId: string, taskId: string, taskData: Partial<Gene
   return await task.save();
 }
 
-const deleteTask = async (userId: string, taskId: string) => {
+// userId: string,
+const deleteTask = async ( taskId: string) => {
   console.log(`Deleting task with ID: ${taskId}`);
 
-  const deletedCount = await Task.destroy({ where: { id: taskId, userId } });
+  //userId
+  const deletedCount = await Task.destroy({ where: { id: taskId } });
   return deletedCount;
 }
 
-const markTaskComplete = async (userId: string, taskId: string) => {
+//userId: string,
+const markTaskComplete = async (taskId: string) => {
   console.log(`Marking task with ID: ${taskId} as complete`);
-  return await Task.update(userId, taskId);
+  //userId: string,
+  return await Task.update({ status: true },
+    { where: { id: taskId } });
 }
 export const tasksService = {
   getTasks,
