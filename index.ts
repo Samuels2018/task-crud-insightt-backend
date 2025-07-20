@@ -1,8 +1,7 @@
 import app from './src';
-import config from './src/config/config';
 import { sequelize } from './src/models';
 
-const PORT = config.port;
+const PORT = process.env.PORT;
 
 sequelize
   .authenticate()

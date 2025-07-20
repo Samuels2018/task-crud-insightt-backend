@@ -1,9 +1,8 @@
 import dotenv from 'dotenv';
-import Config from '../types/config'
 
 dotenv.config();
 
-const config: Config = {
+/*const config: Config = {
   port: process.env.PORT || 3000,
   database: {
     host: process.env.DB_HOST || 'localhost',
@@ -18,4 +17,18 @@ const config: Config = {
   },
 };
 
-export default config;
+export default config;*/
+
+export default {
+  username: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || '',
+  database: process.env.DB_NAME || 'task_crud_insightt',
+  host: process.env.DB_HOST || 'localhost',
+  port: parseInt(process.env.DB_PORT || '3306', 10),
+  dialect: 'mysql', // ¡Asegúrate de incluir esto explícitamente!
+  // Opcional: para evitar warnings de consola
+  define: {
+    timestamps: true,
+    underscored: true,
+  },
+};

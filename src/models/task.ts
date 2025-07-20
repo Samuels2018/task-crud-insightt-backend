@@ -1,8 +1,7 @@
-import {Table, Column, Model, BelongsTo, ForeignKey} from 'sequelize-typescript';
-import User  from './User';
+import {Table, Column, Model, DataType} from 'sequelize-typescript';
 
 @Table({
-  tableName: 'Tasks',
+  tableName: 'tasks',
   timestamps: true,
 })
 
@@ -10,6 +9,7 @@ class Task extends Model {
   @Column({
     primaryKey: true,
     autoIncrement: true,
+    type: DataType.INTEGER
   })
   id!: number;
   @Column({
@@ -22,16 +22,15 @@ class Task extends Model {
   description!: string;
   @Column({
     allowNull: false,
+    type: DataType.INTEGER,
+    defaultValue: 0,
   })
-  status!: boolean;
-  @ForeignKey(() => User)
+  completed!: number;
   @Column({
     allowNull: false,
+    type: 'VARCHAR(255)',
   })
-  userId!: number;
-
-  @BelongsTo(() => User)
-  user!: User;
+  userId!: string;
 }
 
 export default Task;

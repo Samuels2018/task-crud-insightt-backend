@@ -1,17 +1,20 @@
 import { Sequelize } from 'sequelize-typescript';
 import config from '../config/config';
-import User from './User';
 import Task from './task';
 
 const sequelize = new Sequelize({
-  database: config.database.name,
-  username: config.database.user,
-  password: config.database.password,
-  host: config.database.host,
-  port: config.database.port,
-  dialect: 'mysql',
-  models: [User, Task],
-  logging: false,
+  ...config,
+  dialect: config.dialect as any,
+  models: [Task],
+  logging: (sql, timing) => {
+    console.log(`[SQL] ${sql}`);
+    if (timing) console.log(`[Execution time] ${timing}ms`);
+  },
+  define: {
+    underscored: false, // Desactiva snake_case
+    freezeTableName: true, // Evita pluralización
+    timestamps: true // Asegúrate que esté activado
+  }
 });
 
-export { sequelize, User, Task };
+export { sequelize, Task };

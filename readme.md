@@ -134,3 +134,120 @@ ORM	Sequelize + sequelize-typescript	Mapeo objeto-relacional
 Base de Datos	PostgreSQL	Persistencia relacional
 Validación	express-validator	Validación de entradas HTTP
 Seguridad	cors	Manejo CORS
+
+
+
+endpoins
+
+get tasks
+method get
+http://0.0.0.0:3000/api/task
+
+expected response
+[
+  {
+    "id": 1,
+    "title": "Reunión de equipo 111",
+    "description": "Preparar presentación para el cliente XYZ",
+    "completed": 1,
+    "userId": "1",
+    "createdAt": "2025-07-20T21:54:18.000Z",
+    "updatedAt": "2025-07-20T22:23:04.000Z"
+  },
+  {
+    "id": 2,
+    "title": "some",
+    "description": "dwdwdwwdwd",
+    "completed": 0,
+    "userId": "1",
+    "createdAt": "2025-07-20T22:25:59.000Z",
+    "updatedAt": "2025-07-20T22:25:59.000Z"
+  }
+]
+
+create task
+method post
+http://0.0.0.0:3000/api/task/create
+
+example token
+eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMC4wLjAuMDo4MDAzL2FwaS9hdXRoL2xvZ2luIiwiaWF0IjoxNzQ5Nzc1MzgyLCJleHAiOjE3NDk3Nzg5ODIsIm5iZiI6MTc0OTc3NTM4MiwianRpIjoiQ0E3RlRUVHEyRnpBTFdFSyIsInN1YiI6IjEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.32_JLoQFCUzssZ2eW7yqXHxiUpk19yDfBxm7BwnyS1E
+
+{
+  "title": "Reunión de equipo",
+  "description": "Preparar presentación para el cliente XYZ",
+  "completed": 0,
+}
+
+expected response
+{
+  "message": "Task created successfully"
+  "task": {
+    "id": 1,
+    "title": "Reunión de equipo",
+    "description": "Preparar presentación para el cliente XYZ",
+    "completed": 1,
+    "userId": "1",
+    "updatedAt": "2025-07-20T21:54:18.275Z",
+    "createdAt": "2025-07-20T21:54:18.275Z"
+    }
+}
+
+
+update task
+method put
+http://0.0.0.0:3000/api/task/update/1
+
+
+example token
+eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMC4wLjAuMDo4MDAzL2FwaS9hdXRoL2xvZ2luIiwiaWF0IjoxNzQ5Nzc1MzgyLCJleHAiOjE3NDk3Nzg5ODIsIm5iZiI6MTc0OTc3NTM4MiwianRpIjoiQ0E3RlRUVHEyRnpBTFdFSyIsInN1YiI6IjEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.32_JLoQFCUzssZ2eW7yqXHxiUpk19yDfBxm7BwnyS1E
+
+
+{
+  "title": "Reunión de equipo 2222",
+  "description": "Preparar presentación para el cliente XYZ",
+  "completed": 1,
+}
+
+
+expected response
+{
+  "message": "Task updated successfully"
+  "task": {
+    "id": 1,
+    "title": "Reunión de equipo 111",
+    "description": "Preparar presentación para el cliente XYZ",
+    "completed": 1,
+    "userId": "1",
+    "createdAt": "2025-07-20T21:54:18.000Z",
+    "updatedAt": "2025-07-20T22:23:04.422Z"
+  }
+}
+
+
+delete task
+method delete
+http://0.0.0.0:3000/api/task/delete/1
+
+example token
+eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMC4wLjAuMDo4MDAzL2FwaS9hdXRoL2xvZ2luIiwiaWF0IjoxNzQ5Nzc1MzgyLCJleHAiOjE3NDk3Nzg5ODIsIm5iZiI6MTc0OTc3NTM4MiwianRpIjoiQ0E3RlRUVHEyRnpBTFdFSyIsInN1YiI6IjEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.32_JLoQFCUzssZ2eW7yqXHxiUpk19yDfBxm7BwnyS1E
+
+expected response
+{
+  "message": "Task deleted successfully"
+}
+
+
+
+mark as completed
+metho patch
+http://0.0.0.0:3000/api/task/mark-complete/1
+
+example token
+eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMC4wLjAuMDo4MDAzL2FwaS9hdXRoL2xvZ2luIiwiaWF0IjoxNzQ5Nzc1MzgyLCJleHAiOjE3NDk3Nzg5ODIsIm5iZiI6MTc0OTc3NTM4MiwianRpIjoiQ0E3RlRUVHEyRnpBTFdFSyIsInN1YiI6IjEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.32_JLoQFCUzssZ2eW7yqXHxiUpk19yDfBxm7BwnyS1E
+
+expected response 
+{
+  "message": "Task marked as complete"
+}
+
+

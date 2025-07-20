@@ -2,9 +2,25 @@
 import {Request,  Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import {DecodedToken} from '../types/userTypes';
-import config from '../config/config'
+import config from '../config/config';
+import { expressjwt } from "express-jwt";
+import jwks from "jwks-rsa";
 
-export const protect = async (req: Request, res: Response, next: NextFunction) => {
+
+export const verificarToken = expressjwt({
+  secret: jwks.expressJwtSecret({
+    cache: true,
+    rateLimit: true,
+    jwksRequestsPerMinute: 5,
+    jwksUri: `https://${process.env.AUTH0_DOMAIN}/.well-known/jwks.json`
+  }),
+  audience: process.env.AUTH0_AUDIENCE,
+  issuer: `https://${process.env.AUTH0_DOMAIN}/`,
+  algorithms: ["RS256"]
+});
+
+
+/*export const protect = async (req: Request, res: Response, next: NextFunction) => {
   try {
     let token: string | undefined;
 
@@ -35,4 +51,4 @@ export const protect = async (req: Request, res: Response, next: NextFunction) =
   } catch (err) {
     next(err);
   }
-};
+};*/
