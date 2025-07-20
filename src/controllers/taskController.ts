@@ -1,90 +1,119 @@
-import {Request, Response} from 'express';
+import {Request, Response, NextFunction} from 'express';
 import { GeneralTask } from '../types/taskTypes';
 import { tasksService } from '../services/tasksService';
 
 
 
-const getTasks = async (req: Request, res: Response) => {
+const getTasks = async (req: Request, res: Response, next: NextFunction) => {
   console.log('Fetching all tasks');
 
-  const userId = (req as any).auth?.sub;
-  const tasks = await tasksService.getTasks(userId);
-  res.json(tasks);
+  try {
+    const userId = (req as any).auth?.sub;
+    const tasks = await tasksService.getTasks(userId);
+    res.json(tasks);
+  } catch (error) {
+    console.error('Error fetching tasks:', error);
+    next(error);
+  }
 }
 
-const createTask = async (req: Request<{}, {}, GeneralTask>, res: Response) => {
+const createTask = async (req: Request<{}, {}, GeneralTask>, res: Response, next: NextFunction) => {
   console.log('Creating a new task');
 
-  const {title, description, completed} = req.body;
-  const userId = '1'; //(req as any).auth?.sub;
-  console.log('Task details:', {title, description, completed});
+  try {
+    const {title, description, completed} = req.body;
+    const userId = (req as any).auth?.sub;
+    console.log('Task details:', {title, description, completed});
 
-  const newTask = await tasksService.createNewTask(title, description, completed, userId);
+    const newTask = await tasksService.createNewTask(title, description, completed, userId);
 
-  if (newTask === undefined || newTask === null) {
-    return res.status(400).json({message: 'Error creating task'});
+    if (newTask === undefined || newTask === null) {
+      res.status(400).json({message: 'Error creating task'});
+    }
+
+    res.status(201).json({
+      message: 'Task created successfully',
+      task: newTask
+    });
+  } catch (error) {
+    console.error('Error creating task:', error);
+    next(error);
   }
-
-  res.status(201).json({
-    message: 'Task created successfully',
-    task: newTask
-  })
 
 }
 
-const updateTask = async (req: Request, res: Response) => {
+const updateTask = async (req: Request, res: Response, next: NextFunction) => {
   const taskId = req.params.id;
   console.log(`Updating task with ID: ${taskId}`);
 
-  const {title, description, completed} = req.body;
-  const userId = '1'//(req as any).auth?.sub;
-  console.log('Updated task details:', {title, description, completed});
+  try {
+    const {title, description, completed} = req.body;
+    const userId = (req as any).auth?.sub;
+    console.log('Updated task details:', {title, description, completed});
 
-  const updateTasks = await tasksService.updateTask(taskId, {title, description, completed}, userId);
+    const updateTasks = await tasksService.updateTask(taskId, {title, description, completed}, userId);
 
-  if (updateTasks == undefined || updateTasks == null) {
-    res.status(404).json({message: 'Task not found'});
+    if (updateTasks == undefined || updateTasks == null) {
+      res.status(404).json({message: 'Task not found'});
+    }
+
+    res.status(200).json({
+      message: 'Task updated successfully',
+      task: updateTasks
+    });
+
+  } catch (error) {
+    console.error(`Error updating task with ID ${taskId}:`, error);
+    next(error);
   }
-
-  res.status(200).json({
-    message: 'Task updated successfully',
-    task: updateTasks
-  });
 }
 
-const deleteTask = async (req: Request, res: Response) => {
+const deleteTask = async (req: Request, res: Response, next: NextFunction) => {
   const taskId = req.params.id;
   console.log(`Deleting task with ID: ${taskId}`);
 
-  const deleteTasks = await tasksService.deleteTask(taskId);
+  try {
+    const userId = (req as any).auth?.sub;
+    const deleteTasks = await tasksService.deleteTask(taskId);
 
-  if (deleteTasks == undefined || deleteTasks == null) {
-    res.status(404).json({message: 'Task not found'});
+    if (deleteTasks == undefined || deleteTasks == null) {
+      res.status(404).json({message: 'Task not found'});
+    }
+
+
+    res.status(200).json({
+      message: 'Task deleted successfully',
+      task: deleteTasks
+    });
+
+  } catch (error) {
+    console.error(`Error deleting task with ID ${taskId}:`, error);
+    next(error);
   }
-
-
-  res.status(200).json({
-    message: 'Task deleted successfully',
-    task: deleteTasks
-  });
 }
 
 const markTaskComplete = async (req: Request, res: Response) => {
   const taskId = req.params.id;
   console.log(`Marking task with ID: ${taskId} as complete`);
 
-  const userId = '1'//(req as any).auth?.sub;
+  try {
+    const userId = (req as any).auth?.sub;
 
-  const markComplete = await tasksService.markTaskComplete(taskId);
+    const markComplete = await tasksService.markTaskComplete(taskId);
 
-  if (markComplete == undefined || markComplete == null) {
-    res.status(404).json({message: 'Task not found'});
+    if (markComplete == undefined || markComplete == null) {
+      res.status(404).json({message: 'Task not found'});
+    }
+
+    res.status(200).json({
+      message: 'Task marked as complete',
+      task: markComplete
+    });
+
+  }catch (error) {
+    console.error(`Error marking task with ID ${taskId} as complete:`, error);
+    res.status(500).json({message: 'Internal server error'});
   }
-
-  res.status(200).json({
-    message: 'Task marked as complete',
-    task: markComplete
-  });
 }
 
 export const tasksController = {
