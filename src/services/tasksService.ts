@@ -3,7 +3,6 @@ import Task from "../models/task";
 
 const getTasks = async (userId: string) => {
   console.log('Fetching all tasks for user:', userId);
-  //{where: {userId}}
   return await Task.findAll();
 }
 
@@ -13,7 +12,7 @@ const createNewTask = async (title: string, description: string, completed: numb
   return newTask;
 }
 
-const updateTask = async (taskId: string, title: string, description: string, completed: number) => {
+const updateTask = async (taskId: string, updateData: Partial<GeneralTask>, userId?: string) => {
   console.log(`Updating task with ID: ${taskId}`);
 
   const task = await Task.findOne({where: {id: taskId}});
@@ -22,9 +21,8 @@ const updateTask = async (taskId: string, title: string, description: string, co
     return null;
   }
 
-  const taskData: Partial<GeneralTask> = {title, description, completed};
 
-  Object.assign(task, taskData);
+  Object.assign(task, updateData);
   return await task.save();
 }
 

@@ -49,7 +49,7 @@ const updateTask = async (req: Request, res: Response, next: NextFunction) => {
     const {title, description, completed} = req.body;
     console.log('Updated task details:', {title, description, completed});
 
-    const updateTasks = await tasksService.updateTask(taskId, title, description, completed);
+    const updateTasks = await tasksService.updateTask(taskId, {title, description, completed}, (req as any).auth?.sub);
 
     if (updateTasks == null) {
       return res.status(404).json({message: 'Task not found'});
