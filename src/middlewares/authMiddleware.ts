@@ -1,10 +1,7 @@
-// src/middlewares/auth.middleware.ts
-import {Request,  Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
-import {DecodedToken} from '../types/userTypes';
-import config from '../config/config';
 import { expressjwt } from "express-jwt";
 import jwks from "jwks-rsa";
+import dotenv from 'dotenv';
+dotenv.config();
 
 
 export const verificarToken = expressjwt({
@@ -12,7 +9,11 @@ export const verificarToken = expressjwt({
     cache: true,
     rateLimit: true,
     jwksRequestsPerMinute: 5,
-    jwksUri: `https://${process.env.AUTH0_DOMAIN}/.well-known/jwks.json`
+    jwksUri: `https://${process.env.AUTH0_DOMAIN}/.well-known/jwks.json`,
+    handleSigningKeyError: (err, cb) => {
+      console.error('JWKS Error:', err) // 👈 Log de error
+      cb(err)
+    }
   }),
   audience: process.env.AUTH0_AUDIENCE,
   issuer: `https://${process.env.AUTH0_DOMAIN}/`,

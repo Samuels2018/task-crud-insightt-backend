@@ -5,12 +5,10 @@ import {verificarToken} from '../middlewares/authMiddleware';
 
 const taskRouter = Router();
 
-// verificarToken
-
 taskRouter.get('/', tasksController.getTasks);
-taskRouter.post('/create', createTaskValidator, tasksController.createTask);
-taskRouter.put('/update/:id', createTaskValidator, tasksController.updateTask);
-taskRouter.delete('/delete/:id', tasksController.deleteTask);
-taskRouter.patch('/mark-complete/:id', tasksController.markTaskComplete);
+taskRouter.post('/create', verificarToken, createTaskValidator, tasksController.createTask);
+taskRouter.put('/update/:id', verificarToken, createTaskValidator, tasksController.updateTask);
+taskRouter.delete('/delete/:id', verificarToken, tasksController.deleteTask);
+taskRouter.patch('/mark-complete/:id', verificarToken, tasksController.markTaskComplete);
 
 export default taskRouter;
