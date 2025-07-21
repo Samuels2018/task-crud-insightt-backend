@@ -17,13 +17,12 @@ const getTasks = async (req: Request, res: Response, next: NextFunction) => {
   }
 }
 
-const createTask = async (req: Request<{}, {}, GeneralTask>, res: Response, next: NextFunction) => {
+const createTask = async (req: Request, res: Response, next: NextFunction) => {
   console.log('Creating a new task');
 
   try {
-    const {title, description, completed} = req.body;
-    const userId = (req as any).auth?.sub;
-    console.log('Task details:', {title, description, completed});
+    const {title, description, completed, userId} = req.body;
+    console.log('Task details:', {title, description, completed, userId});
 
     const newTask = await tasksService.createNewTask(title, description, completed, userId);
 
@@ -48,13 +47,12 @@ const updateTask = async (req: Request, res: Response, next: NextFunction) => {
 
   try {
     const {title, description, completed} = req.body;
-    const userId = (req as any).auth?.sub;
     console.log('Updated task details:', {title, description, completed});
 
-    const updateTasks = await tasksService.updateTask(taskId, {title, description, completed}, userId);
+    const updateTasks = await tasksService.updateTask(taskId, title, description, completed);
 
-    if (updateTasks == undefined || updateTasks == null) {
-      res.status(404).json({message: 'Task not found'});
+    if (updateTasks == null) {
+      return res.status(404).json({message: 'Task not found'});
     }
 
     res.status(200).json({
@@ -73,7 +71,6 @@ const deleteTask = async (req: Request, res: Response, next: NextFunction) => {
   console.log(`Deleting task with ID: ${taskId}`);
 
   try {
-    const userId = (req as any).auth?.sub;
     const deleteTasks = await tasksService.deleteTask(taskId);
 
     if (deleteTasks == undefined || deleteTasks == null) {
@@ -97,7 +94,6 @@ const markTaskComplete = async (req: Request, res: Response) => {
   console.log(`Marking task with ID: ${taskId} as complete`);
 
   try {
-    const userId = (req as any).auth?.sub;
 
     const markComplete = await tasksService.markTaskComplete(taskId);
 
